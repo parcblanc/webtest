@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2024 인제스피디움 카트 페스티벌 | 인터랙티브 계획안</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Calm Harmony -->
+    <!-- Application Structure Plan: 이 SPA는 사용자가 보고서의 방대한 정보를 직관적으로 소화할 수 있도록 설계되었습니다. 딱딱한 보고서 목차 대신, 'Hero → 비전 → 핵심 이벤트(탭) → 타임라인(필터) → 개선점(카드) → 목표(차트) → 미래'로 이어지는 스토리텔링 구조를 채택했습니다. 이 구조는 사용자의 관심을 자연스럽게 유도하고, 복잡한 내용을 탭, 필터, 차트 등 인터랙티브 요소로 분해하여 탐색의 부담을 줄입니다. 이는 정보의 단순 나열을 넘어, 사용자가 페스티벌의 가치와 계획을 깊이 있게 이해하도록 돕기 위한 최적의 정보 설계입니다. -->
+    <!-- Visualization & Content Choices: 
+        - 보고서 정보: 주요 이벤트 (내구 레이스, 부대 행사) -> 목표: 정보 조직화 -> 표현 방식: 탭(Tab) UI -> 상호작용: 탭 클릭 시 해당 내용 표시 -> 정당성: 두 가지 주요 정보 그룹을 한 공간에서 깔끔하게 분리하여 사용자가 선택적으로 탐색 가능하게 함. (HTML/CSS/JS)
+        - 보고서 정보: 행사 시간표 -> 목표: 시간 흐름에 따른 정보 전달 -> 표현 방식: 날짜 필터가 있는 시각적 타임라인 -> 상호작용: 날짜 버튼 클릭 시 해당일 일정만 필터링 -> 정당성: 텍스트 기반의 긴 표보다 시각적으로 스캔하기 쉽고, 필터 기능으로 원하는 정보에 빠르게 접근 가능. (HTML/CSS/JS)
+        - 보고서 정보: 과거 행사 개선 사항 -> 목표: 비교 및 개선점 강조 -> 표현 방식: 아이콘을 곁들인 '문제점 → 해결책' 카드 그리드 -> 상호작용: 시각적 비교 -> 정당성: 밋밋한 텍스트 비교표를 시각적 스토리텔링으로 전환하여 개선 노력을 효과적으로 전달. (HTML/CSS/Tailwind)
+        - 보고서 정보: 성과 지표(KPI) -> 목표: 핵심 목표 수치화 및 정보 제공 -> 표현 방식: 바(Bar) 차트 -> 상호작용: 막대 호버 시 툴팁으로 정확한 수치 표시 -> 정당성: 숫자 데이터를 시각적으로 명확하게 비교/전달하여 페스티벌의 목표를 한눈에 파악하게 함. (Chart.js/Canvas)
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif; }
+        .tab-button.active { border-color: #2563eb; color: #2563eb; background-color: #eff6ff; }
+        .timeline-filter.active { background-color: #1d4ed8; color: white; }
+        .section-fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .section-fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <span class="text-xl font-bold text-blue-700">인제스피디움 카트 페스티벌</span>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#vision" class="nav-link text-slate-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">페스티벌 비전</a>
+                        <a href="#events" class="nav-link text-slate-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">핵심 이벤트</a>
+                        <a href="#timeline" class="nav-link text-slate-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">타임라인</a>
+                        <a href="#improvements" class="nav-link text-slate-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">주요 개선점</a>
+                        <a href="#goals" class="nav-link text-slate-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">핵심 목표</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section id="hero" class="bg-white">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-24 sm:py-32 text-center">
+                <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight text-slate-900">
+                    <span class="block">2024 인제스피디움</span>
+                    <span class="block text-blue-600">카트 썸머 페스티벌</span>
+                </h1>
+                <p class="mt-6 max-w-2xl mx-auto text-lg md:text-xl text-slate-600">
+                    모터스포츠의 심장, 인제스피디움에서 펼쳐지는 가장 뜨거운 여름 축제!
+                </p>
+                <div class="mt-8 flex justify-center items-center gap-x-6 text-slate-700">
+                    <div class="flex items-center gap-2">
+                        <span class="text-2xl">🗓️</span>
+                        <span>2024년 8월 마지막 주말</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-2xl">📍</span>
+                        <span>인제스피디움 카트장</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="vision" class="py-16 sm:py-24 section-fade-in">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center">
+                    <h2 class="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">페스티벌 비전</h2>
+                    <p class="mt-4 text-lg text-slate-600 max-w-3xl mx-auto">과거의 성공을 넘어, 새로운 미래를 열다</p>
+                </div>
+                <div class="mt-12 max-w-4xl mx-auto text-left text-slate-700 leading-relaxed bg-white p-8 rounded-xl shadow-lg">
+                    <p>2024년 인제스피디움 카트 페스티벌은 단순히 카트 경주를 넘어, **모터스포츠의 대중화**를 선도하는 종합 여름 축제를 지향합니다. 과거 성공적으로 개최되었던 '카트 썸머 페스티벌'의 유산을 계승하고, 인제스피디움의 우수한 인프라를 활용하여 모든 세대가 함께 즐길 수 있는 특별한 경험을 제공하고자 합니다.</p>
+                    <p class="mt-4">프로 선수와 아마추어, 그리고 미래의 챔피언을 꿈꾸는 유소년 드라이버들이 한데 어우러지는 화합의 장을 마련하고, 가족 단위 방문객을 위한 다채로운 부대 프로그램을 통해 '경기가 아닌 축제'로 기억될 것입니다. 이 행사는 **2025년 페스티벌의 성공적인 확장**을 위한 중요한 초석이 될 것입니다.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="events" class="py-16 sm:py-24 bg-white section-fade-in">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center">
+                    <h2 class="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">핵심 이벤트</h2>
+                    <p class="mt-4 text-lg text-slate-600">짜릿한 레이스와 다채로운 즐길 거리</p>
+                </div>
+
+                <div class="mt-10 max-w-4xl mx-auto">
+                    <div class="border-b border-slate-200">
+                        <nav class="-mb-px flex space-x-6" aria-label="Tabs">
+                            <button class="tab-button active whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" data-tab="race">🏁 2시간 내구 레이스</button>
+                            <button class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm text-slate-500" data-tab="activities">🎪 부대 이벤트</button>
+                        </nav>
+                    </div>
+
+                    <div id="race" class="tab-content mt-8">
+                        <h3 class="text-2xl font-semibold text-slate-800">팀워크와 전략의 결정체</h3>
+                        <p class="mt-2 text-slate-600">페스티벌의 하이라이트! 3~4명의 드라이버가 한 팀을 이뤄 2시간 동안 펼치는 릴레이 레이스입니다. 단순한 속도 경쟁을 넘어, 드라이버 교체, 피트 스탑 전략 등 팀의 호흡이 승패를 좌우하는 박진감 넘치는 경기를 선보입니다.</p>
+                        <ul class="mt-6 space-y-4">
+                            <li class="flex items-start">
+                                <span class="flex-shrink-0 flex items-center justify-center h-8 w-8 rounded-full bg-blue-100 text-blue-700 mr-4">🤝</span>
+                                <p><strong>참가 구성:</strong> 프로, 아마추어, 유소년, 연예인, 여성 드라이버 등 총 24개 팀, 80명 이상의 드라이버가 참가하여 실력을 겨룹니다.</p>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="flex-shrink-0 flex items-center justify-center h-8 w-8 rounded-full bg-blue-100 text-blue-700 mr-4">룰</span>
+                                <p><strong>운영 방안:</strong> (사)한국자동차경주협회(KARA) 공인 하에 체계화된 피트 스탑 규정과 전문 오피셜 운영으로 공정성을 확보합니다.</p>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div id="activities" class="tab-content mt-8 hidden">
+                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div class="bg-slate-50 p-6 rounded-lg">
+                                <h4 class="text-xl font-semibold text-slate-800">🚗 드라이빙 아카데미</h4>
+                                <p class="mt-2 text-slate-600">현역 프로 드라이버에게 직접 레이싱의 기초를 배워보세요. 누구나 카레이서가 되어 트랙을 달리는 특별한 경험을 할 수 있습니다.</p>
+                            </div>
+                            <div class="bg-slate-50 p-6 rounded-lg">
+                                <h4 class="text-xl font-semibold text-slate-800">🏕️ 오토캠핑 & 바비큐</h4>
+                                <p class="mt-2 text-slate-600">레이스의 열기가 식은 밤, 가족과 함께 즐기는 캠핑과 바비큐 파티로 잊지 못할 여름밤의 추억을 만드세요.</p>
+                            </div>
+                            <div class="bg-slate-50 p-6 rounded-lg">
+                                <h4 class="text-xl font-semibold text-slate-800">👨‍👩‍👧‍👦 가족 참여 프로그램</h4>
+                                <p class="mt-2 text-slate-600">'영 드라이버 장기자랑', 포토존, 스폰서 부스, 어린이 놀이 공간 등 온 가족이 함께 즐길 수 있는 프로그램이 가득합니다.</p>
+                            </div>
+                             <div class="bg-slate-50 p-6 rounded-lg">
+                                <h4 class="text-xl font-semibold text-slate-800">🏆 VIP/오피셜 체험</h4>
+                                <p class="mt-2 text-slate-600">주요 관계자들을 위한 특별 카트 체험 프로그램을 통해 모터스포츠의 매력을 직접 느끼고 행사에 대한 이해를 높입니다.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="timeline" class="py-16 sm:py-24 section-fade-in">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center">
+                    <h2 class="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">페스티벌 타임라인</h2>
+                    <p class="mt-4 text-lg text-slate-600">이틀간의 짜릿한 여정을 미리 만나보세요.</p>
+                </div>
+                
+                <div class="flex justify-center my-8 space-x-2">
+                    <button class="timeline-filter active px-4 py-2 text-sm font-medium rounded-full transition" data-day="1">1일차 (토)</button>
+                    <button class="timeline-filter bg-white px-4 py-2 text-sm font-medium rounded-full transition" data-day="2">2일차 (일)</button>
+                </div>
+
+                <div class="relative max-w-3xl mx-auto">
+                    <div class="absolute left-1/2 -translate-x-1/2 w-0.5 h-full bg-slate-200"></div>
+                    <div id="timeline-items" class="space-y-12">
+                        <!-- JS로 타임라인 아이템 추가 -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="improvements" class="py-16 sm:py-24 bg-white section-fade-in">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center">
+                    <h2 class="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">한 단계 진화한 페스티벌</h2>
+                    <p class="mt-4 text-lg text-slate-600">과거의 경험을 바탕으로, 더욱 쾌적하고 전문적인 환경을 제공합니다.</p>
+                </div>
+                <div class="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="bg-slate-50 p-6 rounded-lg text-center">
+                        <div class="text-4xl mb-4">☀️ → 쉼</div>
+                        <h4 class="text-xl font-semibold text-slate-800">폭염 대비 휴식 공간</h4>
+                        <p class="mt-2 text-slate-600">대형 그늘막과 냉방 시설을 갖춘 휴게실을 충분히 확보하여 무더위 속에서도 쾌적하게 페스티벌을 즐길 수 있습니다.</p>
+                    </div>
+                    <div class="bg-slate-50 p-6 rounded-lg text-center">
+                        <div class="text-4xl mb-4">👨‍👩‍👧 → 🎈</div>
+                        <h4 class="text-xl font-semibold text-slate-800">가족 편의 시설 확충</h4>
+                        <p class="mt-2 text-slate-600">어린이 놀이터, 푸드 트럭 존 등 가족 단위 방문객을 위한 전용 공간과 즐길 거리를 대폭 강화했습니다.</p>
+                    </div>
+                    <div class="bg-slate-50 p-6 rounded-lg text-center">
+                        <div class="text-4xl mb-4">🚗 → 🅿️</div>
+                        <h4 class="text-xl font-semibold text-slate-800">체계적인 주차 관리</h4>
+                        <p class="mt-2 text-slate-600">넓은 주차 공간과 전문 관리 요원 배치를 통해 빠르고 편리한 주차 환경을 제공합니다.</p>
+                    </div>
+                    <div class="bg-slate-50 p-6 rounded-lg text-center">
+                        <div class="text-4xl mb-4">🤫 → 🔊</div>
+                        <h4 class="text-xl font-semibold text-slate-800">생생한 현장 중계</h4>
+                        <p class="mt-2 text-slate-600">고품질 음향 시스템과 대형 전광판을 설치하여 경기장의 어느 곳에서나 박진감 넘치는 레이스 상황을 즐길 수 있습니다.</p>
+                    </div>
+                    <div class="bg-slate-50 p-6 rounded-lg text-center">
+                        <div class="text-4xl mb-4">⏱️ → ✅</div>
+                        <h4 class="text-xl font-semibold text-slate-800">전문적인 경기 운영</h4>
+                        <p class="mt-2 text-slate-600">내구 레이스 전문 오피셜을 보강하고 체계적인 교육을 통해 피트 스탑 측정 등 모든 과정을 공정하고 정확하게 운영합니다.</p>
+                    </div>
+                     <div class="bg-slate-50 p-6 rounded-lg text-center">
+                        <div class="text-4xl mb-4">🗣️ → 🎤</div>
+                        <h4 class="text-xl font-semibold text-slate-800">전문 아나운서 중계</h4>
+                        <p class="mt-2 text-slate-600">전문 현장 아나운서가 실시간으로 순위 변동과 경기 흐름을 흥미진진하게 전달하여 관람의 재미를 더합니다.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="goals" class="py-16 sm:py-24 section-fade-in">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center">
+                    <h2 class="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">핵심 목표 (KPI)</h2>
+                    <p class="mt-4 text-lg text-slate-600">성공적인 페스티벌을 위한 구체적인 목표를 시각화합니다.</p>
+                </div>
+                <div class="mt-12">
+                    <div class="chart-container relative h-96 max-h-[400px] w-full max-w-3xl mx-auto">
+                        <canvas id="kpiChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-800 text-white">
+        <div class="container mx-auto py-8 px-4 sm:px-6 lg:px-8 text-center">
+            <p>2024 인제스피디움 카트 썸머 페스티벌</p>
+            <p class="text-sm text-slate-400 mt-2">&copy; 2024 Inje Speedium. All rights reserved. 본 페이지는 계획안을 바탕으로 제작된 인터랙티브 웹 애플리케이션입니다.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const timelineData = [
+                { day: 1, time: '08:00 - 09:00', title: '참가자 확인 및 준비', desc: '참가팀 등록 및 브리핑 준비', icon: '📋' },
+                { day: 1, time: '09:00 - 10:00', title: '드라이버 브리핑', desc: '안전 수칙 교육 및 엔트리 배포', icon: '🧑‍🏫' },
+                { day: 1, time: '10:00 - 11:10', title: '공식 연습주행', desc: 'YAMAHA 및 ROTAX 클래스 연습', icon: '⏱️' },
+                { day: 1, time: '11:20 - 11:40', title: '공식 예선', desc: '결승 그리드 순서 결정', icon: '🏁' },
+                { day: 1, time: '11:40 - 13:00', title: '중식 및 카트 체험', desc: '기자단, 오피셜 대상 카트 체험', icon: '🍔' },
+                { day: 1, time: '13:00 - 14:00', title: '가족 프로그램', desc: '영 드라이버 장기자랑, 포토존 운영', icon: '👨‍👩‍👧‍👦' },
+                { day: 1, time: '14:00 - 17:00', title: '드라이빙 아카데미', desc: '일반인 대상 카트 교육', icon: '🎓' },
+                { day: 1, time: '18:00 - 20:00', title: '오토캠핑 및 바비큐 파티', desc: '참가자, 가족 교류의 밤', icon: '🔥' },
+                { day: 2, time: '09:00 - 09:30', title: '드라이버 최종 브리핑', desc: '결승 레이스 규정 재확인', icon: '🗣️' },
+                { day: 2, time: '09:45 - 10:00', title: '그리드 정렬', desc: '참가자 기념 촬영 및 코스인', icon: '📸' },
+                { day: 2, time: '10:00 - 12:00', title: '2시간 내구 레이스 결승', desc: '페스티벌 메인 이벤트', icon: '🏆' },
+                { day: 2, time: '12:00 - 13:30', title: '레이스 종료 및 중식', desc: '기록 집계 및 휴식', icon: '🍽️' },
+                { day: 2, time: '14:00 - 15:00', title: '시상식', desc: '각 종목별 시상 및 기념 촬영', icon: '🥇' },
+                { day: 2, time: '15:00 -', title: '환송 및 정리', desc: '페스티벌 마무리', icon: '👋' },
+            ];
+            
+            const timelineContainer = document.getElementById('timeline-items');
+            const timelineFilters = document.querySelectorAll('.timeline-filter');
+
+            const renderTimeline = (day) => {
+                timelineContainer.innerHTML = '';
+                timelineData.filter(item => item.day == day).forEach((item, index) => {
+                    const sideClass = index % 2 === 0 ? 'md:mr-auto md:pr-8' : 'md:ml-auto md:pl-8';
+                    const textAlign = index % 2 === 0 ? 'md:text-right' : 'md:text-left';
+                    
+                    const el = document.createElement('div');
+                    el.className = `relative w-full md:w-1/2 p-4 bg-white rounded-lg shadow-md ${sideClass}`;
+                    el.innerHTML = `
+                        <div class="absolute top-1/2 -translate-y-1/2 ${index % 2 === 0 ? 'md:right-0 md:-mr-4' : 'md:left-0 md:-ml-4'} hidden md:block">
+                            <span class="flex items-center justify-center h-8 w-8 rounded-full bg-blue-500 text-white">${item.icon}</span>
+                        </div>
+                        <div class="${textAlign}">
+                            <p class="text-sm font-medium text-blue-600">${item.time}</p>
+                            <h4 class="mt-1 text-lg font-semibold text-slate-900">${item.title}</h4>
+                            <p class="mt-1 text-sm text-slate-600">${item.desc}</p>
+                        </div>
+                    `;
+                    timelineContainer.appendChild(el);
+                });
+            };
+
+            timelineFilters.forEach(button => {
+                button.addEventListener('click', () => {
+                    timelineFilters.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    renderTimeline(button.dataset.day);
+                });
+            });
+
+            renderTimeline(1);
+
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const tabId = button.dataset.tab;
+                    
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+
+                    tabContents.forEach(content => {
+                        if (content.id === tabId) {
+                            content.classList.remove('hidden');
+                        } else {
+                            content.classList.add('hidden');
+                        }
+                    });
+                });
+            });
+
+            const kpiCtx = document.getElementById('kpiChart').getContext('2d');
+            const kpiChart = new Chart(kpiCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['참가팀', '참가 드라이버', '가족 방문객 비율(%)', '미디어 기사 수', 'SNS 언급량(천)'],
+                    datasets: [{
+                        label: '2024년 목표',
+                        data: [24, 80, 50, 100, 50],
+                        backgroundColor: 'rgba(59, 130, 246, 0.7)',
+                        borderColor: 'rgba(37, 99, 235, 1)',
+                        borderWidth: 1,
+                        borderRadius: 5,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false,
+                        },
+                        title: {
+                            display: true,
+                            text: '2024 카트 페스티벌 주요 성과 목표',
+                            font: { size: 16 }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        let value = context.parsed.y;
+                                        if (context.label.includes('%')) {
+                                            label += value + '%';
+                                        } else if (context.label.includes('(천)')) {
+                                            label += value + ',000';
+                                        } else {
+                                            label += value + '팀/명';
+                                        }
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: '#e2e8f0'
+                            }
+                        },
+                        x: {
+                             grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                });
+            });
+
+            const sections = document.querySelectorAll('.section-fade-in');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+        });
+    </script>
+</body>
+</html>
