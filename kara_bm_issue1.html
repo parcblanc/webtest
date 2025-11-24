@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KARA 이사회 의결 검토 대시보드</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chosen Palette: Warm Neutrals -->
+    <!-- Application Structure Plan: A tabbed, single-page dashboard. The user (a director) needs clear, distinct information on complex legal issues. A tabbed structure (Summary, Issue 1, Issue 2) is chosen over a long scroll because it allows the user to immediately navigate to their area of concern. The 'Summary & Actions' is the default tab, prioritizing the solution (what needs to be done), which is most actionable for a director. This information architecture separates the complex problems logically, improving usability and comprehension over the original linear document. -->
+    <!-- Visualization & Content Choices: Report Info: Two legal flaws and a summary table. Goal: Inform user of legal risks and required actions. Viz/Presentation Method: No charts are needed as the data is 100% qualitative and legal. Instead, content is presented in stylized text blocks, HTML tables (for legal basis), and ordered lists (for action items). The summary table from the report is redesigned as two 'Action Cards' in the 'Summary' tab for high visibility. Interaction: Tab navigation (JS show/hide) to switch between summary and detailed issue analysis. Justification: This approach directly addresses the user's need to understand complex legal arguments step-by-step, rather than being overwhelmed by a single long text. Library/Method: Vanilla JS for tab interaction. HTML/Tailwind for all layout and styling. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans KR', sans-serif;
+        }
+        .tab-button.active {
+            border-bottom-color: #3b82f6; /* blue-500 */
+            color: #2563eb; /* blue-600 */
+            font-weight: 600;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <div class="container mx-auto max-w-5xl p-4 sm:p-8">
+        
+        <!-- Header -->
+        <header class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-900">KARA 이사회 의결 절차적 하자 검토</h1>
+            <p class="mt-2 text-lg text-gray-600">2025년 X월 X일 이사회 의결의 법적 쟁점 및 조치 사항 대시보드</p>
+            <p class="mt-2 text-lg text-gray-600"><a href="https://docs.google.com/document/d/1lWR12h3R5PqhYet3cigKlWUaeC-Luh9eb759O4EPFAs/edit?tab=t.0#heading=h.godbgj76if6o" target="_blank">[문서보기]</a></p>
+        </header>
+
+        <!-- Tab Navigation -->
+        <nav class="mb-8 border-b border-gray-300">
+            <ul class="flex flex-wrap -mb-px">
+                <li>
+                    <button class="tab-button active inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300" data-tab="summary">
+                        요약 및 조치 사항
+                    </button>
+                </li>
+                <li>
+                    <button class="tab-button inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300" data-tab="issue1">
+                        쟁점 1: 회의록 미서명
+                    </button>
+                </li>
+                <li>
+                    <button class="tab-button inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300" data-tab="issue2">
+                        쟁점 2: '결원 보선' 부적절
+                    </button>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Tab Content Area -->
+        <main>
+            <!-- Section 1: Summary & Actions (Default) -->
+            <section id="summary" class="tab-content active space-y-6">
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                    <p class="text-base leading-relaxed text-gray-700">
+                        이 대시보드는 2025년 X월 X일 이사회 의결과 관련하여 발견된 두 가지 주요 절차적 하자를 요약하고, 협회의 법적 리스크를 해소하기 위한 필수 조치 사항을 안내합니다. 각 쟁점 탭을 클릭하여 상세한 법적 검토 내용을 확인하십시오.
+                    </p>
+                </div>
+                
+                <h2 class="text-2xl font-semibold text-gray-900">핵심 조치 사항</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    
+                    <!-- Action Card 1 -->
+                    <article class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-red-500">
+                        <h3 class="text-xl font-bold text-gray-900 mb-3">쟁점 1: 회의록 미서명</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <span class="text-sm font-semibold text-gray-500 uppercase">현재 상태</span>
+                                <p class="text-gray-700">이사회 회의록에 참석 이사 서명 누락</p>
+                            </div>
+                            <div>
+                                <span class="text-sm font-semibold text-gray-500 uppercase">법적 문제</span>
+                                <p class="text-gray-700 font-medium">의결의 '증명력' 상실, 총회 소집의 절차적 하자 발생</p>
+                            </div>
+                            <div>
+                                <span class="text-sm font-semibold text-blue-600 uppercase">필수 조치</span>
+                                <p class="text-lg font-bold text-blue-700">참석 이사 전원의 서명을 즉시 받아 회의록을 완성해야 합니다.</p>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Action Card 2 -->
+                    <article class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-red-500">
+                        <h3 class="text-xl font-bold text-gray-900 mb-3">쟁점 2: '결원 보선' 안건</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <span class="text-sm font-semibold text-gray-500 uppercase">현재 상태</span>
+                                <p class="text-gray-700">법적 '결원'이 없는 상태에서 '보선' 안건 상정</p>
+                            </div>
+                            <div>
+                                <span class="text-sm font-semibold text-gray-500 uppercase">법적 문제</span>
+                                <p class="text-gray-700 font-medium">정관 제12조 위반, 안건 성립의 절차적 하자 발생</p>
+                            </div>
+                            <div>
+                                <span class="text-sm font-semibold text-blue-600 uppercase">필수 조치</span>
+                                <p class="text-lg font-bold text-blue-700">안건을 '신규 이사 선임 추천'으로 수정하여 이사회를 재의결해야 합니다.</p>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <!-- Section 2: Issue 1: Unsigned Minutes -->
+            <section id="issue1" class="tab-content space-y-6">
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                    <p class="text-base leading-relaxed text-gray-700">
+                        첫 번째 쟁점은 이사회 의결을 공식적으로 증명할 회의록이 서명되지 않은 문제입니다. 이사회 의결은 법인 운영의 중요 행위이며, 회의록은 그 유일한 법적 증거입니다. 이 하자는 향후 총회 소집의 법적 근거 전체를 취약하게 만들 수 있습니다.
+                    </p>
+                </div>
+
+                <article class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                    <h3 class="text-xl font-bold text-gray-900 mb-4">1. 문제의 핵심</h3>
+                    <p class="text-gray-700">
+                        이사회에서 '이사 3인 선임 인준을 위한 임시총회 개최 안건'이 통과되었으나, 해당 이사회의 회의록이 작성 후 참석 이사들의 기명날인 또는 서명을 받지 않은 상태입니다.
+                    </p>
+                </article>
+
+                <article class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                    <h3 class="text-xl font-bold text-gray-900 mb-4">2. 관련 법규 및 정관상 의무</h3>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">구분</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">근거</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">내용</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">법적 중요성</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">민법</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">민법 제71조 (준용) 및 법인 운영 일반 원칙</td>
+                                    <td class="px-6 py-4 text-sm text-gray-700">이사회 회의록에는 의사의 경과 및 결과를 기재하고, 의장 및 참석 이사가 기명날인 또는 서명해야 함.</td>
+                                    <td class="px-6 py-4 text-sm text-gray-700">회의의 성립 및 의결 내용의 **공식적인 확정 및 증명력**을 부여하는 행위입니다.</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">KARA 정관</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">제28조 (회의록 - 일반적 요구사항)</td>
+                                    <td class="px-6 py-4 text-sm text-gray-700">(세부 조항은 누락되었으나) 정관은 민법의 원칙을 따르며, 회의록 서명은 법인 업무의 투명성 확보를 위한 **필수 절차**입니다.</td>
+                                    <td class="px-6 py-4 text-sm text-gray-700">서명이 없는 회의록은 이사회 의결이 있었음을 **대외적(총회, 주무관청)으로 입증할 수 있는 공적 문서로서의 효력을 갖기 어렵습니다.**</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </article>
+
+                <article class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                    <h3 class="text-xl font-bold text-gray-900 mb-4">3. 검토 결과 및 시사점</h3>
+                    <p class="text-gray-700 mb-4">
+                        회의록 서명은 의결 과정의 적법성을 완성하고 그 내용을 공적으로 확정하는 행위입니다. 회의록이 미서명 상태라면, 이는 형식적 하자에 해당하여 해당 이사회 의결은 **증명력을 상실**합니다.
+                    </p>
+                    <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-md">
+                        <h4 class="font-bold text-yellow-800">총회 소집의 적법성 문제</h4>
+                        <p class="text-yellow-700">
+                            총회 소집은 이사회의 적법한 결의를 근거로 해야 합니다. 미서명 회의록을 근거로 소집된 임시총회는 그 **소집 절차의 적법성에 대해 중대한 하자**를 안게 되며, 추후 총회 결의의 무효 확인 소송 등 법적 분쟁의 빌미를 제공할 수 있습니다.
+                        </p>
+                    </div>
+                </article>
+            </section>
+
+            <!-- Section 3: Issue 2: 'Vacancy By-election' Inappropriateness -->
+            <section id="issue2" class="tab-content space-y-6">
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                    <p class="text-base leading-relaxed text-gray-700">
+                        두 번째 쟁점은 안건의 성립 요건에 관한 중대한 절차적 하자입니다. 이사의 '사임 의사 표명'은 법적인 '사임 효력 발생(결원)'과 다릅니다. 법적 결원이 발생하지 않았음에도 '결원 보선' 안건을 상정한 것은 정관의 명백한 위반 소지가 있습니다.
+                    </p>
+                </div>
+
+                <article class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                    <h3 class="text-xl font-bold text-gray-900 mb-4">1. 문제의 핵심</h3>
+                    <p class="text-gray-700">
+                        추가 이사 선임의 배경이 '이사 1인의 사임 의사 표명'임에도 불구하고, 아직 사임 효력이 발생하지 않아 법적으로 '결원'이 발생하지 않은 상태였습니다. 그럼에도 불구하고 이사회 안건은 **결원에 따른 '보선'**으로 상정되었고, 사임 의사를 밝힌 이사 또한 표결에 참여하였습니다.
+                    </p>
+                </article>
+
+                <article class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                    <h3 class="text-xl font-bold text-gray-900 mb-4">2. 관련 정관 및 법규</h3>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">구분</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">근거</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">내용</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">적용</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">KARA 정관</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">제12조 (선임)</td>
+                                    <td class="px-6 py-4 text-sm text-gray-700">임원의 **결원**이 생긴 때에는 2개월 이내에 보선해야 함.</td>
+                                    <td class="px-6 py-4 text-sm text-gray-700">'보선'은 **결원**이 전제 조건입니다.</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">민법</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">법인 임원의 사임 효력</td>
+                                    <td class="px-6 py-4 text-sm text-gray-700">이사의 사임은 그 **의사표시가 법인에 도달한 때** 효력이 발생합니다. (단독행위)</td>
+                                    <td class="px-6 py-4 text-sm text-gray-700">'사임 의사'만으로는 효력이 발생하지 않으며, 이사 지위가 유지됩니다.</td>
+                                </tr>
+                                 <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">KARA 정관</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">제10조 (정수)</td>
+                                    <td class="px-6 py-4 text-sm text-gray-700">이사는 10인 이상 20인 이내 (회장 포함).</td>
+                                    <td class="px-6 py-4 text-sm text-gray-700">이사가 1인 감소하더라도 정수 하한선(10인)을 유지할 경우, 법적인 **필요적 결원**은 아닙니다.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </article>
+
+                <article class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                    <h3 class="text-xl font-bold text-gray-900 mb-4">3. 검토 결과 및 시정 권고</h3>
+                    
+                    <div class="space-y-4">
+                        <div class="bg-red-50 border-l-4 border-red-400 p-4 rounded-md">
+                            <h4 class="font-bold text-red-800">A. '결원'의 부재에 따른 안건 하자가능성</h4>
+                            <p class="text-red-700">
+                                사임 의사 표명 이사가 아직 정식 사임을 완료하지 않았으므로, 이사회 개최 시점에는 **결원이 발생하지 않은 상태**입니다. 따라서 정관 제12조의 '결원 보선' 규정을 적용하여 안건을 상정하는 것은 **절차적 정관 위반**에 해당하여 안건 성립 자체에 중대한 하자가 있습니다.
+                            </p>
+                        </div>
+
+                        <div class="bg-green-50 border-l-4 border-green-400 p-4 rounded-md">
+                            <h4 class="font-bold text-green-800">B. 사임 의사 이사의 표결 참여 적법성</h4>
+                            <p class="text-green-700">
+                                해당 이사는 사임 효력이 발생하지 않았으므로 **여전히 유효한 재적이사**입니다. 따라서 이사회에 출석하여 표결에 참여할 권한이 있으며, 이사 선임 인준 요청 안건은 개인의 이해가 법인과 상반되는 사항(민법 제64조, 이익상반사항)으로 보기 어려워 표결 참여 자체는 적법합니다.
+                            </p>
+                        </div>
+
+                        <div class="bg-blue-50 border-l-4 border-blue-400 p-4 rounded-md">
+                            <h4 class="font-bold text-blue-800">C. 시정 권고: 안건 재설정 및 재의결</h4>
+                            <p class="text-blue-700 mb-3">
+                                현재의 의결은 추후 주무관청의 승인 또는 법적 다툼에서 절차상 하자로 무효가 될 가능성이 매우 높습니다. 따라서 다음과 같이 시정해야 합니다.
+                            </p>
+                            <ol class="list-decimal list-inside text-blue-700 space-y-1">
+                                <li><strong>안건 목적 재설정:</strong> 이번 이사회는 '결원 보선'이 아닌, 정수 범위 내에서 이사 수를 증원하는 "**신규 이사 선임 추천**" 또는 "**임원 정수 증원 및 선임 추천**"의 안건으로 재설정해야 합니다.</li>
+                                <li><strong>적법한 재의결:</strong> 안건의 명칭 및 목적을 수정한 후, **정식 이사회 소집 및 의결 절차를 다시 거쳐야 합니다.**</li>
+                                <li><strong>회의록 완성:</strong> 재의결 후에는 반드시 참석 이사 전원의 서명 또는 기명날인을 받아 회의록을 완성해야 합니다.</li>
+                            </ol>
+                        </div>
+                    </div>
+                </article>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabs = document.querySelectorAll('.tab-button');
+            const contents = document.querySelectorAll('.tab-content');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const targetId = tab.getAttribute('data-tab');
+
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+
+                    contents.forEach(content => {
+                        if (content.id === targetId) {
+                            content.classList.add('active');
+                        } else {
+                            content.classList.remove('active');
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
